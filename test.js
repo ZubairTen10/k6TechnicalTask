@@ -12,5 +12,5 @@ export const options = {
 export default function() {
   let res = http.get('https://test-api.k6.io/public/crocodiles/');
   check(res, { "status is 200": (res) => res.status === 200 });
-  sleep(1);
+  console.log(res.json());
 }
