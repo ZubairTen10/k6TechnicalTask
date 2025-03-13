@@ -53,11 +53,10 @@ export function jsonexptest(){
 }
 
 export function apitest() {
-  const randomElement = array[Math.floor(Math.random() * statusIds.length)];
+  
+  const randomElement = statusIds[Math.floor(Math.random() * statusIds.length)];
   const randomId = statusIds[randomElement];
   let res = http.get(`https://test-api.k6.io/public/crocodiles/`+ randomId.toString());
   check(res, { "status is 200": (res) => res.status === 200 });
   console.log(res.json());
-  // no need for sleep() here, the iteration pacing will be controlled by the
-  // arrival-rate executors above!
 }
