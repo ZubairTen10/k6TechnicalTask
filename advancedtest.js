@@ -43,18 +43,20 @@ if (__ENV.scenario) {
   options.scenarios = scenarios;
 }
 
+   
 export function jsonexptest(){
   let res = http.get(`https://test-api.k6.io/public/crocodiles/`);
   check(res, { "status is 200": (res) => res.status === 200 });
   console.log("This is the json response",res.json()); 
   const jsonRes = res.json();                                          
-  const statusIds = Object.values(jsonRes).map(j => j.id)      //reading json response and getting specifically id values to be stored into variable. 
-  console.log("These are all the ids",statusIds)
+  const crocIds = Object.values(jsonRes).map(j => j.id)      //reading json response and getting specifically id values to be stored into variable. 
+  console.log("These are all the ids",crocIds)
 }
 
 export function apitest() {
-  
-  const randomElement = statusIds[Math.floor(Math.random() * statusIds.length)];
+  jsonRes = (http.get(`https://test-api.k6.io/public/crocodiles/`)).json()
+  const crocIds = Object.values(jsonRes).map(j => j.id)
+  const randomElement = crocIds[Math.floor(Math.random() * crocIds.length)];
   const randomId = statusIds[randomElement];
   let res = http.get(`https://test-api.k6.io/public/crocodiles/`+ randomId.toString());
   check(res, { "status is 200": (res) => res.status === 200 });
