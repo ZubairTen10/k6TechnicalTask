@@ -1,12 +1,6 @@
 import http from 'k6/http';
 import { check,sleep } from 'k6';
 
-//Used this code as template to start my test for selecting crocodile data by id
-// https://grafana.com/docs/k6/latest/using-k6/scenarios/advanced-examples/
-
-
-
-
 let scenarios = {
   first_test: {
     executor: 'shared-iterations',
@@ -26,12 +20,6 @@ let scenarios = {
 export let options = {
   scenarios : {},
   thresholds: {
-    // we can set different thresholds for the different scenarios because
-    // of the extra metric tags we set!
-    'http_req_duration{test_type:api}': ['p(95)<250', 'p(99)<350'],
-    // 'http_req_duration{test_type:website}': ['p(99)<500'],
-    // we can reference the scenario names as well
-    // 'http_req_duration{scenario:my_api_test_2}': ['p(99)<300'],
   },
 };
 
@@ -54,11 +42,11 @@ export function jsonexptest(){
 }
 
 export function apitest() {
-  jsonRes = (http.get(`https://test-api.k6.io/public/crocodiles/`)).json()
+  const jsonRes = (http.get(`https://test-api.k6.io/public/crocodiles/`)).json()
   const crocIds = Object.values(jsonRes).map(j => j.id)
-  const randomElement = crocIds[Math.floor(Math.random() * crocIds.length)];
-  const randomId = statusIds[randomElement];
-  let res = http.get(`https://test-api.k6.io/public/crocodiles/`+ randomId.toString());
+  const randomId = crocIds[Math.floor(Math.random() * crocIds.length)];
+  console.log("The randomly chosen id is:",randomId);
+  let res = http.get(`https://test-api.k6.io/public/crocodiles/${randomId.toString()}`);
   check(res, { "status is 200": (res) => res.status === 200 });
   console.log(res.json());
 }
