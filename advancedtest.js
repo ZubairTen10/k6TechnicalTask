@@ -5,14 +5,14 @@ let scenarios = {
   first_test: {
     executor: 'shared-iterations',
     vus: 1,
-    exec: 'jsonexptest',
+    exec: 'getCrocodilesTest',
     iterations: 1,
   },
-  dyn_api_test: {
+  second_test: {
     executor: 'shared-iterations',
     vus: 1,
     tags: { test_type: 'api' }, 
-    exec: 'apitest', 
+    exec: 'getCrocodileByIdTest', 
     iterations: 1,
   },
 };
@@ -32,7 +32,7 @@ if (__ENV.scenario) {
 }
 
    
-export function jsonexptest(){
+export function getCrocodilesTest(){
   let res = http.get(`https://test-api.k6.io/public/crocodiles/`);
   check(res, { "status is 200": (res) => res.status === 200 });
   console.log("This is the json response",res.json()); 
@@ -41,7 +41,7 @@ export function jsonexptest(){
   console.log("These are all the ids",crocIds)
 }
 
-export function apitest() {
+export function getCrocodileByIdTest() {
   const jsonRes = (http.get(`https://test-api.k6.io/public/crocodiles/`)).json()
   const crocIds = Object.values(jsonRes).map(j => j.id)
   const randomId = crocIds[Math.floor(Math.random() * crocIds.length)];
