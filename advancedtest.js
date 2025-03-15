@@ -2,12 +2,26 @@ import http from 'k6/http';
 import { check,sleep } from 'k6';
 
 let scenarios = {
-  first_test: {
-    executor: 'shared-iterations',
-    vus: 1,
-    exec: 'getCrocodilesAndCrocodileByIdTest',
-    iterations: 1,
+  simple_smoke_test : {
+    executor: 'shared-iterations',     //fixed total number of iteration divided among VUs
+    vus: 2,           
+    exec: 'getCrocodilesAndCrocodileByIdSmokeTest',
+    iterations: 4,          // 4/2=2, 2 iterations of the test function per VU.
+    maxDuration: '5s',
   },
+  steady_load_test: {
+    executor: 'constant-vus',
+    vus: 10,
+    duration: '30s',
+    exec: 'getCrocodilesAndCrocodileByIdTest'
+  },
+  heavy_load_test: {
+    executor: 'constant-vus',
+    vus: 40,
+    duration: '1m',
+    exec: 'getCrocodilesAndCrocodileByIdTest'
+  }
+
 };
 
 export let options = {
@@ -22,17 +36,13 @@ if (__ENV.scenario) {
   options.scenarios = scenarios;
 }
 
-   
-export function getCrocodilesAndCrocodileByIdTest(){
+export function getCrocodilesAndCrocodileByIdSmokeTest (){
   let res1 = http.get(`https://test-api.k6.io/public/crocodiles/`);
   check(res1, { "status is 200": (res1) => res1.status === 200 });
-  
   console.log('Response time of getCrocodiles was ' + String(res1.timings.duration) + ' ms');
-  console.log("This is the json response",res1.json()); 
-
+  console.log("This is the json response",res1.json());      
   const crocIds = Object.values(res1.json()).map(j => j.id)      //reading json response and getting specifically id values to be stored into variable. 
   console.log("These are all the ids",crocIds)
-  
   const randomId = crocIds[Math.floor(Math.random() * crocIds.length)];
   console.log("The randomly chosen id is:",randomId);
   
@@ -40,5 +50,19 @@ export function getCrocodilesAndCrocodileByIdTest(){
   check(res2, { "status is 200": (res2) => res2.status === 200 });
   
   console.log('Response time of getCrocodileById was ' + String(res2.timings.duration) + ' ms');
-  console.log(res2.json());
+  console.log('Data of the random crocodile:',res2.json());
+
+  
+}
+   
+export function getCrocodilesAndCrocodileByIdTest(){
+  let res1 = http.get(`https://test-api.k6.io/public/crocodiles/`);
+  check(res1, { "status is 200": (res1) => res1.status === 200 });
+  const crocIds = Object.values(res1.json()).map(j => j.id)      //reading json response and getting specifically id values to be stored into variable. 
+  
+  const randomId = crocIds[Math.floor(Math.random() * crocIds.length)];
+  
+  let res2 = http.get(`https://test-api.k6.io/public/crocodiles/${randomId.toString()}`);
+  check(res2, { "status is 200": (res2) => res2.status === 200 });
+  
 }
