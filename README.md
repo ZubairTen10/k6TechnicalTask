@@ -16,4 +16,6 @@ Scenario names: <br>
 **ramping_request_rate** <br>
 **ramping_request_rate_cloud** <br>
 
-**heavy_load_test_short** // :  (quite redundant, same amount of VUs as heavy_load_test but shorter. I plan on removing this)
+**heavy_load_test_short** // :  (quite redundant, same amount of VUs as heavy_load_test but shorter. I plan on removing this)<br>
+
+*I also realise I have VUs executor based scenarios and Arrival-Rate executor scenarios running on the same test function, which is contradictory as VUs test functions need sleep() to mimic think time, whereas Arrival-Rate executors are hindered by it since it can cause delays within VUs, when the aim is to maintain/meet a RPS threshold*. 
