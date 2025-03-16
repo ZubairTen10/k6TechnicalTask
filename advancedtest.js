@@ -20,8 +20,48 @@ let scenarios = {
     vus: 40,
     duration: '1m',
     exec: 'getCrocodilesAndCrocodileByIdTest'
+  },
+  heavy_load_test_short: {
+    executor: 'constant-vus',
+    vus: 40,
+    duration: '30s',
+    exec: 'getCrocodilesAndCrocodileByIdTest'
+  },
+  constant_request_rate: {
+    executor: 'constant-arrival-rate',
+    rate: 1000,
+    timeUnit: '1s', // 1000 iterations per second, i.e. 1000 RPS
+    duration: '30s',
+    preAllocatedVUs: 100, // how large the initial pool of VUs would be
+    maxVUs: 400, // if the preAllocatedVUs are not enough, we can initialize more
+    exec: 'getCrocodilesAndCrocodileByIdTest'
+  },
+  ramping_request_rate:{
+    executor: 'ramping-arrival-rate',
+    startRate: 10,
+    timeunit: '1s',
+    preAllocatedVUs: 50,
+    maxVUs: 500,
+    stages: [
+      {duration: '30s', target: 100}, // Start 10 iterations per `timeUnit`, ramp up to 100 rps in 30s.
+      {duration: '1m', target: 500}, //Continue starting 500 iterations per `timeUnit` for the following minute.
+      {duration: '30s', target: 0}, // Linearly ramp-down to 0 iterations per `timeUnit` over the last 30 seconds.
+    ],
+    exec: 'getCrocodilesAndCrocodileByIdTest' ,
+  },
+  ramping_request_rate_cloud:{
+    executor: 'ramping-arrival-rate',
+    startRate: 10,
+    timeunit: '1s',
+    preAllocatedVUs: 50,
+    maxVUs: 100,
+    stages: [
+      {duration: '30s', target: 50}, // Start 10 iterations per `timeUnit`, ramp up to 100 rps in 30s.
+      {duration: '1m', target: 100}, //Continue starting 500 iterations per `timeUnit` for the following minute.
+      {duration: '30s', target: 30}, // Linearly ramp-down to 30 iterations per `timeUnit` over the last 30 seconds.
+    ],
+    exec: 'getCrocodilesAndCrocodileByIdTest' ,
   }
-
 };
 
 export let options = {
@@ -64,5 +104,6 @@ export function getCrocodilesAndCrocodileByIdTest(){
   
   let res2 = http.get(`https://test-api.k6.io/public/crocodiles/${randomId.toString()}`);
   check(res2, { "status is 200": (res2) => res2.status === 200 });
+  
   
 }
