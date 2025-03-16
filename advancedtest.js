@@ -56,7 +56,7 @@ let scenarios = {
     preAllocatedVUs: 50,
     maxVUs: 100,
     stages: [
-      {duration: '30s', target: 50}, // Start 10 iterations per `timeUnit`, ramp up to 100 rps in 30s.
+      {duration: '30s', target: 50}, // Start 10 iterations per `timeUnit`, ramp up to 50 rps in 30s.
       {duration: '1m', target: 100}, //Continue starting 500 iterations per `timeUnit` for the following minute.
       {duration: '30s', target: 30}, // Linearly ramp-down to 30 iterations per `timeUnit` over the last 30 seconds.
     ],
@@ -80,6 +80,9 @@ export function getCrocodilesAndCrocodileByIdSmokeTest (){
   let res1 = http.get(`https://test-api.k6.io/public/crocodiles/`);
   check(res1, { "status is 200": (res1) => res1.status === 200 });
   console.log('Response time of getCrocodiles was ' + String(res1.timings.duration) + ' ms');
+
+  sleep(1);
+
   console.log("This is the json response",res1.json());      
   const crocIds = Object.values(res1.json()).map(j => j.id)      //reading json response and getting specifically id values to be stored into variable. 
   console.log("These are all the ids",crocIds)
@@ -88,8 +91,10 @@ export function getCrocodilesAndCrocodileByIdSmokeTest (){
   
   let res2 = http.get(`https://test-api.k6.io/public/crocodiles/${randomId.toString()}`);
   check(res2, { "status is 200": (res2) => res2.status === 200 });
-  
   console.log('Response time of getCrocodileById was ' + String(res2.timings.duration) + ' ms');
+  
+  sleep(1);
+
   console.log('Data of the random crocodile:',res2.json());
 
   
