@@ -121,5 +121,8 @@ export function getCrocodilesAndCrocodileByIdTest(){
  
   getCrocodilesResponseTime.add(res1.timings.duration)
   getCrocodilesByIdResponseTime.add(res2.timings.duration)
+
+  check(res1, { "res1 status is 500": (res1) => res1.status === 500 });
+  check(res2, { "res2 status is 500": (res2) => res2.status === 500 });
   
 }
