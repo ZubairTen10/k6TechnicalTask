@@ -85,7 +85,6 @@ if (__ENV.scenario) {
 export function getCrocodilesAndCrocodileByIdSmokeTest (){
   let res1 = http.get(`https://test-api.k6.io/public/crocodiles/`);
   check(res1, { "status is 200": (res1) => res1.status === 200 });
-  console.log('Response time of getCrocodiles was ' + String(res1.timings.duration) + ' ms');
 
   sleep(1);
 
@@ -101,7 +100,9 @@ export function getCrocodilesAndCrocodileByIdSmokeTest (){
   sleep(1);
 
   console.log('Data of the random crocodile:',res2.json());
-
+  
+  getCrocodilesResponseTime.add(res1.timings.duration)
+  getCrocodilesByIdResponseTime.add(res2.timings.duration)
   
 }
    
