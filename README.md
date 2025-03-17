@@ -14,7 +14,7 @@ Scenario names: <br>
 **heavy_load_test** <br>
 **constant_request_rate** <br>
 **ramping_request_rate** <br>
-**ramping_request_rate_cloud** <br>
+**ramping_request_rate_cloud** : Just a copy of ramping_request_rate scenario, but I limited the VUs to 100 to fit the k6 free cloud allowance. <br>
 
 **heavy_load_test_short** // :  (quite redundant, same amount of VUs as heavy_load_test but shorter. I plan on removing this)<br>
 
