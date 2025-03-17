@@ -1,6 +1,6 @@
 ﻿# My k6 Test Project <br>
 
-The advancedtest.js has the k6 test script to run performance tests on the k6 test api *public/crocodiles* URI, and endpoint *"/crocodiles/id"*. <br>
+The advancedtest.js has the k6 test script to run performance tests on the k6 test api *"/public/crocodiles"* URI, and endpoint *"/crocodiles/id"*. <br>
 
 My program has specific scenario running capability, you can specify exactly which test scenario you want to run with the CLI. Using the format " **k6 run --env scenario=<scenario_name> advancedtest.js** " . <br>
 Else, if you would like to run the entire test suite, the command is the regular: " **k6 run advancedtest.js** " . <br>
