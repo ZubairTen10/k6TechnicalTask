@@ -117,7 +117,7 @@ export function getCrocodilesAndCrocodileByIdTest(){
 
   check(res1, {'Response time for 1st get req is below 500ms': (res1) => res1.timings.duration < 500});
   
-  check(res2, {'Response time for 2nd get req is below 500ms': (res2) => res2.timings.duration < 600});
+  check(res2, {'Response time for 2nd get req is below 600ms': (res2) => res2.timings.duration < 600});
  
   getCrocodilesResponseTime.add(res1.timings.duration)
   getCrocodilesByIdResponseTime.add(res2.timings.duration)
