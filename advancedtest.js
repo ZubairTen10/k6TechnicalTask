@@ -14,7 +14,7 @@ let scenarios = {
     iterations: 4,          // 4/2=2, 2 iterations of the test function per VU.
     maxDuration: '5s',
   },
-  steady_load_test: {
+  load_test: {
     executor: 'constant-vus',
     vus: 10,
     duration: '30s',
@@ -28,7 +28,7 @@ let scenarios = {
   },
   heavy_load_test_short: {
     executor: 'constant-vus',
-    vus: 40,
+    vus: 70,
     duration: '30s',
     exec: 'getCrocodilesAndCrocodileByIdTest'
   },
@@ -49,8 +49,8 @@ let scenarios = {
     maxVUs: 500,
     stages: [
       {duration: '30s', target: 100}, // Start 10 iterations per `timeUnit`, ramp up to 100 rps in 30s.
-      {duration: '1m', target: 500}, //Continue starting 500 iterations per `timeUnit` for the following minute.
-      {duration: '30s', target: 0}, // Linearly ramp-down to 0 iterations per `timeUnit` over the last 30 seconds.
+      {duration: '30s', target: 500}, //Continue starting 500 iterations per `timeUnit` for the following minute.
+      {duration: '30s', target: 10}, // Linearly ramp-down to 0 iterations per `timeUnit` over the last 30 seconds.
     ],
     exec: 'getCrocodilesAndCrocodileByIdTest' ,
   },
@@ -115,12 +115,11 @@ export function getCrocodilesAndCrocodileByIdTest(){
   let res2 = http.get(`https://test-api.k6.io/public/crocodiles/${randomId.toString()}`);
   check(res2, { "status is 200": (res2) => res2.status === 200 });
 
-  check(res1, {
-    'Response time for 1st get req is below 500ms': (res1) => res1.timings.duration < 500});
-
-  check(res2, {
-    'Response time for 2nd get req is below 600ms': (res2) => res2.timings.duration < 600});
-
+  check(res1, {'Response time for 1st get req is below 500ms': (res1) => res1.timings.duration < 500});
+  
+  check(res2, {'Response time for 2nd get req is below 500ms': (res2) => res2.timings.duration < 600});
+ 
   getCrocodilesResponseTime.add(res1.timings.duration)
   getCrocodilesByIdResponseTime.add(res2.timings.duration)
+  
 }
