@@ -107,23 +107,24 @@ export function getCrocodilesAndCrocodileByIdSmokeTest (){
 }
    
 export function getCrocodilesAndCrocodileByIdTest(){
-  let res1 = http.get(`https://test-api.k6.io/public/crocodiles/`);
-  check(res1, { "status is 200": (res1) => res1.status === 200 });
-  const crocIds = Object.values(res1.json()).map(j => j.id)      //reading json response and getting specifically id values to be stored into variable. 
+  let getCrocsRes = http.get(`https://test-api.k6.io/public/crocodiles/`);
+  check(getCrocsRes, { "Get crocodiles status is 200": (getCrocsRes) => getCrocsRes.status === 200 });
+  const crocIds = Object.values(getCrocsRes.json()).map(j => j.id)      //reading json response and getting specifically id values to be stored into variable. 
   
   const randomId = crocIds[Math.floor(Math.random() * crocIds.length)];
   
-  let res2 = http.get(`https://test-api.k6.io/public/crocodiles/${randomId.toString()}`);
-  check(res2, { "status is 200": (res2) => res2.status === 200 });
+  let getCrocByIdRes = http.get(`https://test-api.k6.io/public/crocodiles/${randomId.toString()}`);
 
-  check(res1, {'Response time for 1st get req is below 500ms': (res1) => res1.timings.duration < 500});
+  check(getCrocByIdRes, { [`Get crocodilebyid where id = ${randomId.toString()} is 200` ]: (getCrocById) => getCrocById.status === 200 });
+
+  check(getCrocsRes, {'Response time for 1st get req is below 500ms': (getCrocsRes) => getCrocsRes.timings.duration < 500});
   
-  check(res2, {'Response time for 2nd get req is below 600ms': (res2) => res2.timings.duration < 600});
+  check(getCrocByIdRes, {'Response time for 2nd get req is below 600ms': (getCrocByIdRes) => getCrocByIdRes.timings.duration < 600});
  
-  getCrocodilesResponseTime.add(res1.timings.duration)
-  getCrocodilesByIdResponseTime.add(res2.timings.duration)
+  getCrocodilesResponseTime.add(getCrocsRes.timings.duration)
+  getCrocodilesByIdResponseTime.add(getCrocByIdRes.timings.duration)
 
-  check(res1, { "res1 status is 500": (res1) => res1.status === 500 });
-  check(res2, { "res2 status is 500": (res2) => res2.status === 500 });
+  check(getCrocsRes, { "res1 status is 500": (getCrocsRes) => getCrocsRes.status === 500 });
+  check(getCrocByIdRes, { "res2 status is 500": (getCrocByIdRes) => getCrocByIdRes.status === 500 });
   
 }
