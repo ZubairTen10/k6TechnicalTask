@@ -117,14 +117,14 @@ export function getCrocodilesAndCrocodileByIdTest(){
 
   check(getCrocByIdRes, { [`Get crocodilebyid where id = ${randomId.toString()} is 200` ]: (getCrocById) => getCrocById.status === 200 });
 
-  check(getCrocsRes, {'Response time for 1st get req is below 500ms': (getCrocsRes) => getCrocsRes.timings.duration < 500});
+  check(getCrocsRes, {'Response time for getCrocs request is below 500ms': (getCrocsRes) => getCrocsRes.timings.duration < 500});
   
-  check(getCrocByIdRes, {'Response time for 2nd get req is below 600ms': (getCrocByIdRes) => getCrocByIdRes.timings.duration < 600});
+  check(getCrocByIdRes, {'Response time for getCrocById request is below 600ms': (getCrocByIdRes) => getCrocByIdRes.timings.duration < 600});
  
   getCrocodilesResponseTime.add(getCrocsRes.timings.duration)
   getCrocodilesByIdResponseTime.add(getCrocByIdRes.timings.duration)
 
-  check(getCrocsRes, { "res1 status is 500": (getCrocsRes) => getCrocsRes.status === 500 });
-  check(getCrocByIdRes, { "res2 status is 500": (getCrocByIdRes) => getCrocByIdRes.status === 500 });
+  check(getCrocsRes, { "getCrocs response status is 500": (getCrocsRes) => getCrocsRes.status === 500 });
+  check(getCrocByIdRes, { "getCrocById response status is 500": (getCrocByIdRes) => getCrocByIdRes.status === 500 });
   
 }
