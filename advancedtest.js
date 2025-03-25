@@ -72,6 +72,9 @@ let scenarios = {
 
 export let options = {
   scenarios : {},
+  thresholds: {
+    http_req_duration: ['p(95)<500'],
+  }
 };
 
 
